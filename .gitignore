@@ -1,0 +1,51 @@
+# Data files
+data/
+*.fits
+*.fits.gz
+*.hdf5
+*.h5
+
+# Results and outputs
+results/
+*.png
+*.pdf
+*.jpg
+
+# Logs
+logs/
+*.out
+*.err
+slurm-*.out
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+astro_env/
+*.egg-info/
+dist/
+build/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+*.log
