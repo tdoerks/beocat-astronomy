@@ -27,7 +27,7 @@ mkdir -p logs
 mkdir -p ../results
 
 # Navigate to scripts directory
-cd $SLURM_SUBMIT_DIR/scripts
+cd $SLURM_SUBMIT_DIR/../scripts
 
 # Run analysis script
 python analyze_tess_transits.py -d ../data/tess -o ../results

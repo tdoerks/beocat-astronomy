@@ -25,7 +25,7 @@ source $HOME/astro_env/bin/activate
 mkdir -p logs
 
 # Navigate to scripts directory
-cd $SLURM_SUBMIT_DIR/scripts
+cd $SLURM_SUBMIT_DIR/../scripts
 
 # Run download script
 # Adjust -n parameter to download more/fewer targets
