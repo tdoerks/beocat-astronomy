@@ -39,7 +39,10 @@ def analyze_lightcurve(fits_file, output_dir='../results'):
     os.makedirs(output_dir, exist_ok=True)
 
     # Normalize and clean the light curve
-    lc = lc.normalize().remove_nans().remove_outliers(sigma=5)
+    # Remove NaNs first, then normalize (handles unit issues)
+    lc = lc.remove_nans()
+    lc = lc.normalize(unit='percent')  # Normalize to percent (unitless)
+    lc = lc.remove_outliers(sigma=5)
 
     # Flatten to remove stellar variability
     flat_lc = lc.flatten(window_length=401)
