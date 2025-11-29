@@ -46,7 +46,11 @@ def analyze_lightcurve(fits_file, output_dir='../results'):
     # Get median flux value and normalize
     import numpy as np
     median_flux = np.nanmedian(lc.flux.value)
-    lc.flux = lc.flux.value / median_flux  # Strip units and normalize in one step
+    lc.flux = lc.flux.value / median_flux  # Strip units and normalize
+
+    # Also strip units from flux_err to match
+    if lc.flux_err is not None:
+        lc.flux_err = lc.flux_err.value / median_flux
 
     lc = lc.remove_outliers(sigma=5)
 
