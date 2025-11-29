@@ -27,18 +27,24 @@ def download_tess_sample(num_targets=10, output_dir='../data/tess'):
     print(f"Downloading {num_targets} TESS light curves...")
     print(f"Output directory: {output_dir}")
 
-    # Sample of interesting TIC IDs (known planets and candidates)
+    # Sample of interesting TIC IDs (known planets with confirmed TESS data)
+    # Using well-studied exoplanet systems with reliable SPOC pipeline data
     tic_ids = [
-        'TIC 25155310',  # TOI-270
-        'TIC 219006104', # TOI-125
-        'TIC 410214986', # TOI-1338
-        'TIC 307210830', # TOI-2076
-        'TIC 238855987', # TOI-1807
-        'TIC 279741379', # TOI-1899
-        'TIC 177309964', # TOI-1136
-        'TIC 55652896',  # TOI-1233
-        'TIC 92226327',  # TOI-519
-        'TIC 440887364', # TOI-1518
+        'TIC 307210830',  # TOI-1130 b,c - Multi-planet system
+        'TIC 206544316',  # Pi Mensae c - Confirmed planet
+        'TIC 261136679',  # L 98-59 - Multi-planet system
+        'TIC 277539431',  # HD 39091 b - Hot Jupiter
+        'TIC 388857263',  # HD 221416 b - Sub-Neptune
+        'TIC 259377017',  # LHS 3844 b - Rocky planet
+        'TIC 234994474',  # HD 21749 b,c - Multi-planet
+        'TIC 38846515',   # WASP-18 b - Hot Jupiter
+        'TIC 231670397',  # WASP-126 b - Hot Jupiter
+        'TIC 300163192',  # WASP-52 b - Hot Jupiter
+        'TIC 167664935',  # TOI-178 - Multi-planet system
+        'TIC 377780944',  # GJ 357 - Multi-planet system
+        'TIC 29344935',   # Beta Pictoris b - Young Jupiter
+        'TIC 150428135',  # TOI-561 - Dense rocky planet
+        'TIC 336732616',  # Qatar-1 b - Hot Jupiter
     ]
 
     # Limit to requested number
@@ -47,32 +53,35 @@ def download_tess_sample(num_targets=10, output_dir='../data/tess'):
     downloaded = 0
     for tic_id in tqdm(tic_ids):
         try:
-            # Search for TESS data
-            search_result = lk.search_lightcurve(tic_id, mission='TESS')
+            # Search for TESS SPOC (Science Processing Operations Center) data only
+            # This ensures we get high-quality, properly processed light curves
+            search_result = lk.search_lightcurve(
+                tic_id,
+                mission='TESS',
+                author='SPOC'  # Use only official TESS pipeline products
+            )
 
             if len(search_result) == 0:
-                print(f"  No data found for {tic_id}")
+                print(f"  No SPOC data found for {tic_id}")
                 continue
 
-            # Download all available sectors
-            lc_collection = search_result.download_all()
+            # Download first available sector only (faster, less data)
+            # Change to .download_all() if you want all sectors
+            lc = search_result[0].download()
+
+            if lc is None:
+                print(f"  Download failed for {tic_id}")
+                continue
 
             # Save to file
             output_file = os.path.join(output_dir, f"{tic_id.replace(' ', '_')}.fits")
-
-            # Stitch sectors together if multiple
-            if len(lc_collection) > 1:
-                lc = lc_collection.stitch()
-            else:
-                lc = lc_collection[0]
-
             lc.to_fits(output_file, overwrite=True)
 
-            print(f"  Downloaded {tic_id}: {len(lc)} data points")
+            print(f"  ✓ Downloaded {tic_id}: {len(lc)} data points, Sector {lc.sector}")
             downloaded += 1
 
         except Exception as e:
-            print(f"  Error downloading {tic_id}: {e}")
+            print(f"  ✗ Error downloading {tic_id}: {str(e)[:100]}")
             continue
 
     print(f"\nSuccessfully downloaded {downloaded}/{len(tic_ids)} targets")
