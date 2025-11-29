@@ -33,7 +33,7 @@ def analyze_lightcurve(fits_file, output_dir='../results'):
 
     print(f"\nAnalyzing {target_name}...")
     print(f"  Data points: {len(lc)}")
-    print(f"  Time range: {lc.time.min():.2f} to {lc.time.max():.2f} days")
+    print(f"  Time range: {lc.time.min().value:.2f} to {lc.time.max().value:.2f} days")
 
     # Create output directory
     os.makedirs(output_dir, exist_ok=True)
