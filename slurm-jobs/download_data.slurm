@@ -8,9 +8,12 @@
 #SBATCH --output=logs/download_%j.out
 #SBATCH --error=logs/download_%j.err
 
-# Download TESS data using lightkurve
-# This job downloads light curves for analysis
+# PHASE 1: Download confirmed exoplanet host stars
+# This job downloads 50 confirmed exoplanet light curves for pipeline validation
 
+echo "=========================================="
+echo "PHASE 1: Confirmed Exoplanet Download"
+echo "=========================================="
 echo "Job started: $(date)"
 echo "Running on node: $(hostname)"
 echo ""
@@ -27,9 +30,10 @@ mkdir -p logs
 # Navigate to scripts directory
 cd $SLURM_SUBMIT_DIR/../scripts
 
-# Run download script
-# Adjust -n parameter to download more/fewer targets
-python download_tess_data.py -n 10 -o ../data/tess
+# Run download script for 50 confirmed exoplanets
+echo "Downloading 50 confirmed exoplanet host stars..."
+python download_tess_data.py -n 50 -o ../data/tess
 
 echo ""
 echo "Job finished: $(date)"
+echo "Results saved to: ../data/tess/"
