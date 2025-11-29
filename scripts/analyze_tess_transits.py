@@ -39,12 +39,14 @@ def analyze_lightcurve(fits_file, output_dir='../results'):
     os.makedirs(output_dir, exist_ok=True)
 
     # Normalize and clean the light curve
-    # Remove NaNs and convert to SAP flux (removes unit issues)
+    # Remove NaNs first
     lc = lc.remove_nans()
 
-    # Convert flux to simple array to avoid unit arithmetic issues
-    lc = lc.normalize()
-    lc.flux = lc.flux.value  # Strip units
+    # Manual normalization to avoid unit issues
+    # Get median flux value and normalize
+    import numpy as np
+    median_flux = np.nanmedian(lc.flux.value)
+    lc.flux = lc.flux.value / median_flux  # Strip units and normalize in one step
 
     lc = lc.remove_outliers(sigma=5)
 
