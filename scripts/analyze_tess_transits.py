@@ -39,9 +39,13 @@ def analyze_lightcurve(fits_file, output_dir='../results'):
     os.makedirs(output_dir, exist_ok=True)
 
     # Normalize and clean the light curve
-    # Remove NaNs first, then normalize (handles unit issues)
+    # Remove NaNs and convert to SAP flux (removes unit issues)
     lc = lc.remove_nans()
-    lc = lc.normalize(unit='percent')  # Normalize to percent (unitless)
+
+    # Convert flux to simple array to avoid unit arithmetic issues
+    lc = lc.normalize()
+    lc.flux = lc.flux.value  # Strip units
+
     lc = lc.remove_outliers(sigma=5)
 
     # Flatten to remove stellar variability
