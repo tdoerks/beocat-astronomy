@@ -8,10 +8,9 @@ import numpy as np
 import matplotlib
 matplotlib.use('Agg')  # Non-interactive backend for HPC
 import matplotlib.pyplot as plt
-from lightkurve import LightCurve
+import lightkurve as lk
 import os
 import argparse
-from astropy.io import fits
 from glob import glob
 
 def analyze_lightcurve(fits_file, output_dir='../results'):
@@ -26,8 +25,8 @@ def analyze_lightcurve(fits_file, output_dir='../results'):
         Directory to save results
     """
 
-    # Load light curve
-    lc = LightCurve.read(fits_file)
+    # Load light curve using lightkurve's TESS-specific reader
+    lc = lk.read(fits_file)
 
     # Get target name from filename
     target_name = os.path.basename(fits_file).replace('.fits', '')
