@@ -54,10 +54,11 @@ def download_random_tess_stars(num_targets=1000, output_dir='../data/tess_random
 
         try:
             # Search for this TIC ID
+            # Accept both SPOC (2-min) and FFI (30-min) data for better coverage
             search_result = lk.search_lightcurve(
                 f'TIC {tic_id}',
-                mission='TESS',
-                author='SPOC'
+                mission='TESS'
+                # Removed author='SPOC' filter - accept any TESS data!
             )
 
             if len(search_result) == 0:
