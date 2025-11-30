@@ -10,7 +10,7 @@ import os
 from tqdm import tqdm
 import random
 
-def download_random_tess_stars(num_targets=1000, output_dir='../data/tess_random'):
+def download_random_tess_stars(num_targets=1000, output_dir='../data/tess_random', seed=42):
     """
     Download TESS light curves for random stars
 
@@ -20,6 +20,8 @@ def download_random_tess_stars(num_targets=1000, output_dir='../data/tess_random
         Number of random targets to download
     output_dir : str
         Directory to save downloaded data
+    seed : int
+        Random seed for reproducibility (default: 42)
     """
 
     # Create output directory
@@ -34,7 +36,8 @@ def download_random_tess_stars(num_targets=1000, output_dir='../data/tess_random
 
     # Generate random TIC IDs to try
     print("\nGenerating random TIC IDs to search...")
-    random.seed(42)  # Reproducible random selection
+    print(f"Using random seed: {seed}")
+    random.seed(seed)  # Reproducible random selection
 
     # We'll try more than num_targets since many won't have SPOC data
     attempts = num_targets * 5  # Try 5x to account for failures
@@ -96,7 +99,9 @@ if __name__ == "__main__":
                         help='Number of random stars to download (default: 1000)')
     parser.add_argument('-o', '--output-dir', type=str, default='../data/tess_random',
                         help='Output directory (default: ../data/tess_random)')
+    parser.add_argument('-s', '--seed', type=int, default=42,
+                        help='Random seed for reproducibility (default: 42)')
 
     args = parser.parse_args()
 
-    download_random_tess_stars(args.num_targets, args.output_dir)
+    download_random_tess_stars(args.num_targets, args.output_dir, args.seed)
