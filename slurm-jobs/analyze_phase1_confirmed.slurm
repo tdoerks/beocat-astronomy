@@ -23,7 +23,26 @@ echo ""
 module load Python/3.9
 
 # Activate astronomy environment
-source $HOME/astro_env/bin/activate
+ASTRO_ENV="/homes/tylerdoe/astro_env"
+if [ ! -d "$ASTRO_ENV" ]; then
+    echo "ERROR: Astronomy environment not found at $ASTRO_ENV"
+    echo "Run: bash scripts/setup_beocat_env.sh"
+    exit 1
+fi
+
+echo "Activating environment: $ASTRO_ENV"
+source $ASTRO_ENV/bin/activate
+
+# Verify lightkurve is available
+python -c "import lightkurve" 2>/dev/null
+if [ $? -ne 0 ]; then
+    echo "ERROR: lightkurve not found in environment"
+    echo "Run: pip install lightkurve"
+    exit 1
+fi
+
+echo "Environment ready - lightkurve loaded"
+echo ""
 
 # Create directories if they don't exist
 mkdir -p logs
