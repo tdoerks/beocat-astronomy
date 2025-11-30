@@ -30,7 +30,53 @@
 
 ---
 
+## 🚀 Phase 2B: Full TOI Catalog (Ready to Launch!)
+
+### NEW: Analyze ALL ~7,000 TOI Candidates in 24 Hours!
+
+**Motivation:** Phase 2 successfully analyzed 196 TOIs in 31 minutes. Let's scale to the ENTIRE catalog!
+
+**Job Scripts Ready:**
+- `download_phase2b_all_tois.slurm` - Download all ~7,000 TOIs (12-hour limit)
+- `analyze_phase2b_all_tois.slurm` - Analyze all downloaded TOIs (12-hour limit)
+
+**To Launch Phase 2B:**
+```bash
+cd /homes/tylerdoe/beocat-astronomy/slurm-jobs
+
+# Step 1: Download all TOIs (run first, ~12 hours)
+sbatch download_phase2b_all_tois.slurm
+
+# Step 2: After download completes, analyze all TOIs (~8 hours)
+sbatch analyze_phase2b_all_tois.slurm
+```
+
+**Performance Estimates (based on Phase 2 results):**
+- Download: ~7,000 TOIs × 5 sec/each = ~10 hours
+- Analysis: ~7,000 TOIs ÷ 15/min = ~8 hours
+- **Total: ~18-20 hours** (fits in 24-hour window with buffer!)
+
+**Expected Results:**
+- ~6,000-7,000 successful downloads (~90% success rate from Phase 2)
+- ~14,000 plots (analysis + phase-folded transits)
+- Storage: ~5.9 GB total
+- **Scientific Impact:** Comprehensive validation of TESS exoplanet candidates!
+
+**What to Look For:**
+- Strong transit signals (power > 1,000) = likely confirmed exoplanets
+- Periods matching known TOI predictions = validation success
+- New strong signals = potential discoveries or improved characterization
+
+---
+
 ## ✅ Completed Work
+
+### Phase 2 Success: 196 TOI Candidates Analyzed!
+- Downloaded and analyzed 196 TOI candidates (TOI-100 through TOI-299)
+- 392 PNG plots generated (analysis + phase-folded transits, 109 MB)
+- Strong signals found: TOI-123 (power: 13,536!), TOI-197, TOI-244
+- Analysis completed in ~13 minutes (15 TOIs/minute rate!)
+- Results: `/homes/tylerdoe/beocat-astronomy/results/phase2_toi/`
 
 ### Successful Initial Test (9 exoplanets)
 - Downloaded and analyzed 9 confirmed exoplanets

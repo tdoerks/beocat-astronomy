@@ -4,28 +4,51 @@ HPC-powered astronomy data analysis on Kansas State University's Beocat cluster.
 
 ## Project Overview
 
-This project leverages Beocat's computational resources to:
-- Analyze TESS exoplanet transit data
-- Process large astronomical datasets
-- Run machine learning models on GPU nodes
-- Perform parallel data analysis at scale
+This project leverages Beocat's computational resources to analyze TESS exoplanet transit data using a comprehensive 3-phase pipeline:
+
+**Phase 1:** Validate pipeline on 33 confirmed exoplanets
+**Phase 2:** Analyze 196 TOI candidates (unconfirmed exoplanets)
+**Phase 2B:** Scale to ALL ~7,000 TOI candidates (24-hour run) ⭐ **NEW!**
+**Phase 3:** Search 1,000 random stars for missed transits (discovery mode)
+
+### Completed Milestones:
+✅ Phase 1: 9/9 test exoplanets successfully detected
+✅ Phase 2: 196/196 TOI candidates analyzed (13 minutes)
+✅ Strong signals found: TOI-123 (power: 13,536!)
+🚀 **Phase 2B: Ready to analyze entire TOI catalog (~7,000 candidates!)**
 
 ## Repository Structure
 
 ```
 beocat-astronomy/
 ├── scripts/           # Analysis and data processing scripts
-│   ├── setup_beocat_env.sh      # Environment setup
-│   ├── download_tess_data.py    # Download TESS light curves
-│   └── analyze_tess_transits.py # Transit detection analysis
+│   ├── setup_beocat_env.sh          # Environment setup
+│   ├── download_tess_data.py        # Phase 1: Download confirmed exoplanets
+│   ├── download_tess_toi.py         # Phase 2/2B: Download TOI candidates
+│   ├── download_tess_random.py      # Phase 3: Random star search
+│   └── analyze_tess_transits.py     # BLS transit detection analysis
 ├── slurm-jobs/        # Slurm batch job templates
-│   ├── download_data.slurm      # Data download job
-│   ├── analyze_transits.slurm   # Transit analysis job
-│   ├── gpu_ml_example.slurm     # GPU machine learning template
-│   └── parallel_array.slurm     # Parallel array job template
-├── notebooks/         # Jupyter notebooks for exploration
+│   ├── download_data.slurm              # Phase 1 download
+│   ├── download_phase2_toi.slurm        # Phase 2 download (200 TOIs)
+│   ├── download_phase2b_all_tois.slurm  # Phase 2B download (7,000 TOIs) ⭐
+│   ├── download_phase3_random.slurm     # Phase 3 download
+│   ├── analyze_phase1_confirmed.slurm   # Phase 1 analysis
+│   ├── analyze_phase2_toi.slurm         # Phase 2 analysis
+│   ├── analyze_phase2b_all_tois.slurm   # Phase 2B analysis (full catalog) ⭐
+│   └── analyze_phase3_random.slurm      # Phase 3 analysis
 ├── data/              # Data storage (gitignored)
+│   ├── tess/              # Phase 1: Confirmed exoplanet light curves
+│   ├── tess_toi/          # Phase 2: 196 TOI candidate light curves
+│   ├── tess_toi_full/     # Phase 2B: ~7,000 TOI light curves ⭐
+│   └── tess_random/       # Phase 3: Random star light curves
 ├── results/           # Analysis results (gitignored)
+│   ├── phase1_confirmed/  # Phase 1 results
+│   ├── phase2_toi/        # Phase 2 results (196 TOIs, 392 plots)
+│   ├── phase2b_toi_full/  # Phase 2B results (~14,000 plots!) ⭐
+│   └── phase3_random/     # Phase 3 results
+├── GIT_WORKFLOW.md    # Git branching strategy (main vs stable)
+├── SESSION_STATUS.md  # Current session status and next steps
+├── PHASE2B_LAUNCH.md  # Complete guide for Phase 2B launch ⭐
 └── docs/              # Documentation
 ```
 
@@ -47,35 +70,47 @@ bash scripts/setup_beocat_env.sh
 
 This creates a virtual environment at `~/astro_env` with all required astronomy packages.
 
-### 2. Download TESS Data
+### 2. Run Phase 2B: Analyze ALL ~7,000 TOI Candidates! ⭐
 
-Download exoplanet transit data from TESS:
+The fastest way to contribute to exoplanet science - analyze the entire TESS TOI catalog:
 
 ```bash
-# Submit download job to Slurm
 cd slurm-jobs
-sbatch download_data.slurm
 
-# Check job status
+# Step 1: Download all ~7,000 TOI candidates (12 hours)
+sbatch download_phase2b_all_tois.slurm
+
+# Check status
 squeue -u $USER
 
-# View output when complete
-tail logs/download_*.out
+# Step 2: When download completes, analyze all TOIs (8 hours)
+sbatch analyze_phase2b_all_tois.slurm
+
+# View results summary
+cat ../results/phase2b_toi_full/analysis_summary.txt
 ```
 
-### 3. Analyze Transits
+**See `PHASE2B_LAUNCH.md` for complete details!**
 
-Run transit detection analysis:
+### 3. Alternative: Run Individual Phases
 
+**Phase 1 - Validate Pipeline (33 confirmed exoplanets):**
 ```bash
-# Submit analysis job
-sbatch analyze_transits.slurm
+cd slurm-jobs
+sbatch download_data.slurm
+sbatch analyze_phase1_confirmed.slurm
+```
 
-# Monitor progress
-tail -f logs/analysis_*.out
+**Phase 2 - Test TOI Analysis (196 candidates):**
+```bash
+sbatch download_phase2_toi.slurm
+sbatch analyze_phase2_toi.slurm
+```
 
-# View results when complete
-ls ../results/
+**Phase 3 - Random Star Search (1,000 stars, discovery mode):**
+```bash
+sbatch download_phase3_random.slurm
+sbatch analyze_phase3_random.slurm
 ```
 
 ## Available Scripts

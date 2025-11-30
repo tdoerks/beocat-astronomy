@@ -46,7 +46,8 @@ def download_toi_candidates(num_targets=200, output_dir='../data/tess_toi'):
             print("Falling back to direct TOI number search...")
 
             # Fallback: Try specific TOI numbers
-            toi_numbers = list(range(100, 100 + num_targets))  # TOI-100 through TOI-299
+            # For full catalog: range(1, 7500) covers all known TOIs
+            toi_numbers = list(range(1, 7500))  # TOI-1 through TOI-7499
             downloaded = 0
 
             for toi_num in tqdm(toi_numbers[:num_targets]):
