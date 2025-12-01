@@ -3,7 +3,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=4
-#SBATCH --time=12:00:00
+#SBATCH --time=168:00:00
 #SBATCH --mem=32G
 #SBATCH --output=logs/analyze_phase2b_all_tois_%j.out
 #SBATCH --error=logs/analyze_phase2b_all_tois_%j.err
@@ -54,14 +54,16 @@ mkdir -p ../results/phase2b_toi_full
 cd $SLURM_SUBMIT_DIR/../scripts
 
 # Run analysis script on Phase 2B full TOI catalog
-echo "Analyzing ALL ~7,000 TOI candidate light curves..."
-echo "This will take several hours - analyzing 35x more targets than Phase 2!"
-echo "Expected: ~6,000-7,000 successful BLS periodogram analyses"
+echo "Analyzing 5,893 TOI candidate light curves..."
+echo "This will take several hours - analyzing 30x more targets than Phase 2!"
+echo "Expected: ~5,893 successful BLS periodogram analyses"
 echo ""
 echo "Performance estimate (based on Phase 2 results):"
 echo "  - Phase 2: 196 TOIs in ~13 minutes (analysis only)"
 echo "  - Rate: ~15 TOIs/minute"
-echo "  - 7,000 TOIs: ~7-8 hours estimated"
+echo "  - 5,893 TOIs: ~6-7 hours estimated"
+echo ""
+echo "Note: 7-day time limit ensures completion even if slower than expected"
 echo ""
 
 python analyze_tess_transits.py -d ../data/tess_toi_full -o ../results/phase2b_toi_full

@@ -3,7 +3,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
-#SBATCH --time=24:00:00
+#SBATCH --time=168:00:00
 #SBATCH --mem=8G
 #SBATCH --output=logs/phase3_mega_10k_%j.out
 #SBATCH --error=logs/phase3_mega_10k_%j.err
