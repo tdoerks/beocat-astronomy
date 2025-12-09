@@ -4,7 +4,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
 #SBATCH --time=168:00:00
-#SBATCH --mem=8G
+#SBATCH --mem=32G
 #SBATCH --output=logs/phase3_ultra_70k_%j.out
 #SBATCH --error=logs/phase3_ultra_70k_%j.err
 
@@ -21,6 +21,7 @@ echo ""
 echo "TARGET: 70,000 random TESS stars"
 echo "EXPECTED: Search ~700,000 TIC IDs at 10% hit rate"
 echo "STORAGE: ~70 GB data + ~70 GB results = ~140 GB total"
+echo "MEMORY: 32 GB (increased from 8 GB to handle large downloads)"
 echo "TIME: 7 days (168 hours)"
 echo ""
 echo "This is UNPRECEDENTED - largest random TESS survey!"
